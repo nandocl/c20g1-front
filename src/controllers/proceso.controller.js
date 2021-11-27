@@ -15,3 +15,11 @@ export async function listProyectos() {
         return
     });
 };
+
+export async function borrarProyecto(id) {
+    return Vue.axios.delete(`/proyecto/${id}`).then(resp => {
+        return resp.data.error;
+    }).catch(e => {
+        return true;
+    });
+};

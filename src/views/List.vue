@@ -6,7 +6,8 @@
         <b-col>
             <b-table striped hover :items="proyectosList" :fields="fields">
                 <template #cell(actions)="row">
-                    <button class="btn btn-dark" @click="detalles(row)">Ver</button>
+                    <button class="btn btn-dark me-2" @click="detalles(row)">Ver</button>
+                    <button class="btn btn-danger" @click="borrar(row)">Borrar</button>
                 </template>
             </b-table>
         </b-col>
@@ -83,7 +84,7 @@ export default {
     });
   },
   methods: {
-      detalles(row){
+      async detalles(row){
           this.name = this.proyectosList[row.index].name
           this.client = this.proyectosList[row.index].client
           this.fechaEstimada = this.proyectosList[row.index].fechaEstimada
@@ -92,6 +93,19 @@ export default {
           this.materiaPrima = this.proyectosList[row.index].materiaPrima
           this.herramientas = this.proyectosList[row.index].herramientas
           this.procesos = this.proyectosList[row.index].procesos
+      },
+      async borrar(row){
+        const prj = await processController.borrarProyecto(this.proyectosList[row.index].proyectoId);
+        if(!prj) {
+            for(let i = 0; i < this.proyectosList.length; i++){
+                if(this.proyectosList[i].proyectoId == this.proyectosList[row.index].proyectoId){
+                    this.proyectosList.splice(i, 1);
+                    break;
+                }
+            }
+            alert('Proyecto borrado exitosamente');
+        }
+        else alert('Proyecto no borrado');
       }
   }
 }
