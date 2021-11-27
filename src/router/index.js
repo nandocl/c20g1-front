@@ -13,7 +13,7 @@ const routes = [
   {
     path: '/encurso',
     name: 'encurso',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/List.vue')
   }
 ]
 

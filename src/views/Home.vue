@@ -3,7 +3,7 @@
     <b-container class="pt-5 pb-5">
       <div class="mb-5 h2">Creacion de proyecto</div>
       <b-row>
-        <b-col cols="3">
+        <b-col>
           <b-input-group-text class="m-2" label="Enter your name">
             <b-form-input placeholder="Nombre del proyecto" v-model="textData.prjName"></b-form-input>
           </b-input-group-text>
@@ -22,7 +22,7 @@
           <div v-if="procesos.length == 0">No hay procesos</div>
           <b-table striped hover :items="procesos"></b-table>
           <b-row>
-            <b-col><b-form-input v-model="procesoName" placeholder="Proceso"></b-form-input></b-col>
+            <b-col><b-form-input v-model="procesoName.name" placeholder="Proceso"></b-form-input></b-col>
             <b-col><b-button @click="addProceso">Agregar</b-button></b-col>
           </b-row>
         </b-col>
@@ -31,7 +31,7 @@
           <div v-if="herramientas.length == 0">No hay herramientas</div>
           <b-table striped hover :items="herramientas"></b-table>
           <b-row>
-            <b-col><b-form-input v-model="herramienta.name" placeholder="Herramienta"></b-form-input></b-col>
+            <b-col><b-form-input v-model="herramienta.name" placeholder="Nombre"></b-form-input></b-col>
             <b-col><b-form-input v-model="herramienta.process" placeholder="Proceso"></b-form-input></b-col>
             <b-col><b-button @click="addHerramienta">Agregar</b-button></b-col>
           </b-row>
@@ -84,9 +84,7 @@ import * as processController from '../controllers/proceso.controller'
 
 export default {
   name: 'Home',
-  components: {
-    
-  },
+  components: {},
     data() {
       return {
         textData: {
@@ -95,7 +93,7 @@ export default {
           client: "",
           date: ""
         },
-        procesoName: "",
+        procesoName: {name: ""},
         herramienta: {name: "", process: ""},
         insumo: {cantidad: 0, insName: ""},
         prima: {matPrim: "", dims: ""},
@@ -109,6 +107,7 @@ export default {
     methods: {
       addProceso(){
         this.procesos.push(this.procesoName)
+        console.log(this.procesos)
         this.procesoName = ''
       },
       addHerramienta(){
@@ -127,16 +126,32 @@ export default {
         this.prima.dims = ''
       },
       crearPj(){
-        const project = {name: this.textData.prjName, responsable: this.textData.resp, client: this.textData.client, fechaEstimada: this.textData.date, procesos: this.procesos, herramientas: this.herramientas, insumo: this.insumos, materiaPrima: this.primas, anotaciones: this.anotacion, archivos: [{ docName: 'Doc v 1', docUrl: 'http//...' }]}
+        const project = {name: this.textData.prjName, responsable: this.textData.resp, client: this.textData.client, fechaEstimada: this.textData.date, procesos: this.procesos, herramientas: this.herramientas, insumo: this.insumos, materiaPrima: this.primas, anotaciones: this.anotacion}
 
-        console.log(project)
-
-        processController.guardarProyecto(project).then(res => {
-          const proyectoResp = res;
+        processController.guardarProyecto(project).then(() => {
+          this.clearFields()
+          alert('Proyecto creado correctamente')
         }).catch(err => {
-          console.log(err)
+          alert('Error creando proyecto', err)
         })
       },
+      clearFields(){
+        this.textData = {
+          prjName: "",
+          resp: "",
+          client: "",
+          date: ""
+        }
+        this.procesoName = {name: ""}
+        this.herramienta = {name: "", process: ""}
+        this.insumo = {cantidad: 0, insName: ""}
+        this.prima = {matPrim: "", dims: ""}
+        this.procesos = []
+        this.herramientas = []
+        this.insumos = []
+        this.primas = []
+        this.anotacion = ""
+      }
     }
 }
 </script>

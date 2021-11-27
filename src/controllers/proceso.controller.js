@@ -7,3 +7,11 @@ export async function guardarProyecto(data) {
         console.log(e)
     });
 };
+
+export async function listProyectos() {
+    return await Vue.axios.get('/proyecto', {limit: 5, page: 1}).then(resp => {
+        return resp.data.proyectos;
+    }).catch(e => {
+        return
+    });
+};
